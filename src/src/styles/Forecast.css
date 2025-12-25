@@ -1,0 +1,287 @@
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px 48px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 28px;
+  margin: 28px 0 18px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  font-size: 12px;
+  margin: 0 0 6px;
+}
+
+.lede {
+  margin: 6px 0 12px;
+  color: #374151;
+  max-width: 560px;
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #f59e0b;
+}
+
+.status-dot.ok {
+  background: #22c55e;
+}
+
+.status-dot.warn {
+  background: #f97316;
+}
+
+.error-text {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.panel {
+  background: #0b1224;
+  color: #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.35);
+}
+
+.panel h3 {
+  margin: 0 0 12px;
+}
+
+.field-label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.text-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.text-input:focus {
+  outline: 2px solid #6366f1;
+  border-color: transparent;
+}
+
+.options-stack {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.options-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.option-row.tight {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ghost-btn {
+  background: none;
+  color: #6366f1;
+  border: 1px solid #c7d2fe;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ghost-btn.danger {
+  color: #f87171;
+  border-color: #fecaca;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #111827, #4338ca);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.hint {
+  color: #a5b4fc;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.grid-left,
+.grid-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  background: #eef2ff;
+  color: #312e81;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.badge.subtle {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.muted {
+  color: #6b7280;
+}
+
+.muted.small {
+  font-size: 13px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+}
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.options-list {
+  border-top: 1px solid #e5e7eb;
+  margin: 12px 0;
+  padding-top: 10px;
+}
+
+.option-label {
+  margin: 0;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.option-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.bet-panel {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+}
+
+.bet-controls {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.bet-list {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.bet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 8px;
+}
+
+.bullet-list {
+  padding-left: 18px;
+  color: #374151;
+}
+
+.bullet-list li {
+  margin: 6px 0;
+}
+
+.callout {
+  background: #eef2ff;
+  color: #312e81;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.sticky {
+  position: sticky;
+  top: 90px;
+}
+
+@media (max-width: 1024px) {
+  .hero,
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    position: relative;
+  }
+}
