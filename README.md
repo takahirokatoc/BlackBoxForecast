@@ -1,110 +1,181 @@
-# FHEVM Hardhat Template
+# BlackBoxForecast
 
-A Hardhat-based template for developing Fully Homomorphic Encryption (FHE) enabled Solidity smart contracts using the
-FHEVM protocol by Zama.
+BlackBoxForecast is an encrypted prediction market that lets anyone create a forecast with 2 to 4 outcomes, wager ETH
+on a choice, and keep both selections and totals confidential on-chain using Zama FHE. The contract stores encrypted
+vote counts and encrypted stake totals, while users can selectively decrypt their own data through the Zama relayer.
 
-## Quick Start
+## Overview
 
-For detailed instructions see:
-[FHEVM Hardhat Quick Start Tutorial](https://docs.zama.ai/protocol/solidity-guides/getting-started/quick-start-tutorial)
+Prediction markets are powerful, but transparency leaks signals early. Public bets can influence sentiment, allow
+copying, and discourage honest participation. BlackBoxForecast solves this by encrypting choices and tallies so that
+the market can function without leaking sensitive intent or capital allocation.
 
-### Prerequisites
+This repository includes:
+- A Solidity smart contract that stores encrypted selections and encrypted aggregate totals.
+- Hardhat deployment, tasks, and tests for local and Sepolia environments.
+- A React + Vite frontend that uses Zama's relayer SDK for client-side encryption and decryption.
 
-- **Node.js**: Version 20 or higher
-- **npm or yarn/pnpm**: Package manager
+## Problems Solved
 
-### Installation
+- **Privacy of intent**: Choices are encrypted before they reach the chain, preventing copy-trading and herding.
+- **Confidential liquidity**: Total stakes per option are encrypted, removing real-time price signaling.
+- **Trust-minimized storage**: All sensitive tallies stay on-chain as ciphertext, not in a private database.
+- **User-controlled access**: Decryption requires a wallet signature, so users decide what to reveal.
 
-1. **Install dependencies**
+## Key Advantages
 
-   ```bash
-   npm install
-   ```
+- **End-to-end encrypted flow**: Choices, counts, and totals never appear in plaintext on-chain.
+- **Composable on-chain state**: Encrypted totals are still verifiable and updatable within the contract.
+- **Simple market creation**: Anyone can spin up a prediction with 2-4 outcomes in one transaction.
+- **Transparent yet private**: The contract is public and auditable, while user inputs stay confidential.
+- **No reliance on local storage**: The frontend avoids storing sensitive data in the browser.
 
-2. **Set up environment variables**
+## How It Works
 
-   ```bash
-   npx hardhat vars set MNEMONIC
+1. The creator calls `createPrediction` with a name and 2-4 option labels.
+2. A bettor encrypts their option index client-side using Zama's relayer SDK.
+3. The contract stores the encrypted choice and updates encrypted vote counts and stake totals.
+4. The bettor can request decryption of their own handles using an EIP-712 signature.
+5. Option totals can be decrypted only by authorized users who request access.
 
-   # Set your Infura API key for network access
-   npx hardhat vars set INFURA_API_KEY
+## Core Features
 
-   # Optional: Set Etherscan API key for contract verification
-   npx hardhat vars set ETHERSCAN_API_KEY
-   ```
+- Create predictions with a human-readable title and 2-4 options.
+- Place ETH-backed bets with encrypted selections.
+- Maintain encrypted tallies of votes and total stakes per option.
+- View prediction metadata and option labels on-chain in plaintext.
+- Decrypt encrypted totals and personal bet data through the relayer flow.
 
-3. **Compile and test**
+## Architecture
 
-   ```bash
-   npm run compile
-   npm run test
-   ```
+### Smart Contract (`contracts/BlackBoxForecast.sol`)
 
-4. **Deploy to local network**
+- Uses Zama FHE types (`euint32`, `euint64`, `euint128`) to store selections and totals.
+- Emits `PredictionCreated` and `BetPlaced` for observability without revealing data.
+- Stores per-user encrypted bets for later self-decryption.
+- Keeps totals confidential while still allowing on-chain aggregation.
 
-   ```bash
-   # Start a local FHEVM-ready node
-   npx hardhat node
-   # Deploy to local network
-   npx hardhat deploy --network localhost
-   ```
+### Frontend (`src/`)
 
-5. **Deploy to Sepolia Testnet**
+- React + Vite UI with wallet connectivity (RainbowKit + wagmi).
+- **Reads** are done with viem; **writes** are done with ethers.
+- Zama relayer SDK handles encryption, ACL signatures, and decryption.
+- Uses static contract configuration in `src/src/config/contracts.ts` (no JSON imports).
 
-   ```bash
-   # Deploy to Sepolia
-   npx hardhat deploy --network sepolia
-   # Verify contract on Etherscan
-   npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
-   ```
+## Tech Stack
 
-6. **Test on Sepolia Testnet**
+- **Smart contracts**: Solidity 0.8.x, FHEVM by Zama
+- **Framework**: Hardhat + hardhat-deploy
+- **Encryption**: `@fhevm/solidity` and `@zama-fhe/relayer-sdk`
+- **Frontend**: React, Vite, RainbowKit, wagmi, viem, ethers
+- **Testing**: Hardhat + FHEVM mock
 
-   ```bash
-   # Once deployed, you can run a simple test on Sepolia.
-   npx hardhat test --network sepolia
-   ```
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-fhevm-hardhat-template/
-├── contracts/           # Smart contract source files
-│   └── FHECounter.sol   # Example FHE counter contract
-├── deploy/              # Deployment scripts
-├── tasks/               # Hardhat custom tasks
-├── test/                # Test files
-├── hardhat.config.ts    # Hardhat configuration
-└── package.json         # Dependencies and scripts
+BlackBoxForecast/
+├── contracts/                  # Smart contracts
+│   └── BlackBoxForecast.sol
+├── deploy/                     # Deployment scripts
+├── tasks/                      # Hardhat CLI tasks
+├── test/                       # Contract tests (FHEVM mock)
+├── deployments/                # Deployment artifacts (Sepolia ABI lives here)
+├── src/                        # Frontend app (React + Vite)
+└── hardhat.config.ts
 ```
 
-## 📜 Available Scripts
+## Prerequisites
 
-| Script             | Description              |
-| ------------------ | ------------------------ |
-| `npm run compile`  | Compile all contracts    |
-| `npm run test`     | Run all tests            |
-| `npm run coverage` | Generate coverage report |
-| `npm run lint`     | Run linting checks       |
-| `npm run clean`    | Clean build artifacts    |
+- Node.js 20+
+- npm
+- Sepolia ETH for deployment and testing
 
-## 📚 Documentation
+## Installation
 
-- [FHEVM Documentation](https://docs.zama.ai/fhevm)
-- [FHEVM Hardhat Setup Guide](https://docs.zama.ai/protocol/solidity-guides/getting-started/setup)
-- [FHEVM Testing Guide](https://docs.zama.ai/protocol/solidity-guides/development-guide/hardhat/write_test)
-- [FHEVM Hardhat Plugin](https://docs.zama.ai/protocol/solidity-guides/development-guide/hardhat)
+Install contract dependencies at the repo root:
 
-## 📄 License
+```bash
+npm install
+```
 
-This project is licensed under the BSD-3-Clause-Clear License. See the [LICENSE](LICENSE) file for details.
+Install frontend dependencies:
 
-## 🆘 Support
+```bash
+npm --prefix src install
+```
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/zama-ai/fhevm/issues)
-- **Documentation**: [FHEVM Docs](https://docs.zama.ai)
-- **Community**: [Zama Discord](https://discord.gg/zama)
+## Configuration
 
----
+Contracts use a private key for deployments. Do not use a mnemonic.
 
-**Built with ❤️ by the Zama team**
+Create a `.env` file at the repo root with:
+
+```
+PRIVATE_KEY=your_private_key
+INFURA_API_KEY=your_infura_key
+```
+
+Optional Etherscan verification can be set via Hardhat vars:
+
+```bash
+npx hardhat vars set ETHERSCAN_API_KEY
+```
+
+## Compile and Test
+
+```bash
+npm run compile
+npm run test
+```
+
+Note: Tests run against the FHEVM mock and will skip on non-mock networks.
+
+## Deploy
+
+Deploy to Sepolia:
+
+```bash
+npx hardhat deploy --network sepolia
+```
+
+Verify contract (optional):
+
+```bash
+npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
+```
+
+## Frontend Setup
+
+The frontend is hardwired to Sepolia. It does not connect to a localhost chain.
+
+1. Copy the deployed ABI from `deployments/sepolia/BlackBoxForecast.json`.
+2. Update `src/src/config/contracts.ts` with the new contract address and ABI.
+3. Run the app:
+
+```bash
+npm --prefix src run dev
+```
+
+## CLI Tasks
+
+Useful Hardhat tasks for interacting with the contract:
+
+```bash
+npx hardhat task:forecast-address
+npx hardhat task:create-prediction --name "Will ETH hit $10k?" --options "Yes,No"
+npx hardhat task:place-bet --prediction 0 --choice 1 --stake 0.1
+npx hardhat task:decrypt-option --prediction 0 --option 1
+```
+
+## Future Roadmap
+
+- Add resolution mechanics and payout distribution.
+- Introduce oracle integration for automated settlement.
+- Support multiple bets per user with richer analytics.
+- Add role-based permissions for shared decryption workflows.
+- Expand to multi-chain deployments and L2 networks.
+- Improve UX with batch decrypt, history filters, and export tools.
+
+## License
+
+BSD-3-Clause-Clear. See `LICENSE`.
